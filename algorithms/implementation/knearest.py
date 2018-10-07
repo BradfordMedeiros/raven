@@ -11,6 +11,7 @@ from sklearn.neighbors import NearestNeighbors
 #
 #  knearest({ humidity: { 20, 10, }})
 #
+
 class knearest():
 	def __init__(self, labels = None, predictors=None, configData=None):
 		if not (len(configData[0]) == len(predictors[0])):

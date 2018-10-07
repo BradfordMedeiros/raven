@@ -1,35 +1,27 @@
-import argparse
 import sys
-import csv 
-
-from algorithms.testAlgorithm import main as testAlgorithm
-from algorithms.knearest import knearest
+from algorithms.implementation.testAlgorithm import main as testAlgorithm
+from algorithms.arg_parsing.knearest import parse_args
 from config.read_data_map import read_data_map
 
-parser = argparse.ArgumentParser(description='Process some integers.')
-parser.add_argument('-a', '--algorithm', dest='algorithm', required=True, help='algorithm to use')
-parser.add_argument('-d', '--data', dest='data', required=True, help='file from which to get data from')
+moduleName = sys.argv[1]
 
-options = parser.parse_args(sys.argv[1:])
-
-algorithms = {
-	'test': testAlgorithm,
-	'knearest': knearest
+modules = {
+	'knearest': {
+		'parse_args' : parse_args,
+	}
 }
 
-if not options.algorithm in algorithms:
-	print ('algorithm undefined')
-	sys.exit(1)
+module = modules[moduleName]
+module_args = sys.argv[2:]
 
-algorithm = algorithms[options.algorithm]
+options = module['parse_args'](module_args)
+print('options: ', options)
 
 
 data_map = None
 print ('using file: ', options.data)
-try:
-	data_map = read_data_map(options.data)
-except:
-	print 'error parsing map'
+data_map = read_data_map(options.data)
+
 
 
 #l = ['apple', 'go', 'bana']
