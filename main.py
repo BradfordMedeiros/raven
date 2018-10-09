@@ -7,22 +7,18 @@ from algorithms.config_requirements.knearest import is_valid_data_map as is_vali
 
 moduleName = sys.argv[1]
 
-def test1(d):
-	print('decision-tree placeholder')
-
-def test2(d):
-	print('test placeholder')
+def execute_knearest(data_map):
+	print ('execute k-knearest success')
 
 modules = {
 	'knearest': {
-		'parse_args' : parse_k_args
+		'parse_args' : parse_k_args,
+		'valid_map': is_valid_data_map_knearest,
+		'execute': execute_knearest,
 	},
 	'bayes': {
 		'parse_args': parse_bayes_args
 	},
-	'test': {
-		'parse_args': test2
-	}
 }
 
 if moduleName == 'help' or moduleName == '-h':
@@ -36,14 +32,24 @@ if moduleName == 'help' or moduleName == '-h':
 module = modules[moduleName]
 module_args = sys.argv[2:]
 options = module['parse_args'](module_args)
-print('options: ', options)
-
-
 data_map = None
-print ('using file: ', options.data)
-data_map = read_data_map(options.data)
 
-print('data map: ', data_map)
+print 'parsing csv'
+data_map = read_data_map(options.data)
+print 'csv parse success'
+
+print 'checking data validity'
+valid_map = module['valid_map'](data_map)
+if not valid_map:
+	print('invalid config for knearest')
+	exit(1)
+
+print 'valid map'
+
+print 'starting executing : ' , moduleName
+module['execute'](data_map)
+
+
 
 """
 def create_from_data_map(data_map):

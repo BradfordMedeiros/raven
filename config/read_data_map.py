@@ -4,7 +4,7 @@ import csv
 {
 	
 	labels: ['temperature', 'humidity', 'growth'],
-	is_predictor: [False, False, True]
+	is_predictor: [True, True, False]
 	values: [
 		[10, 30,0.4],   # should be numpy array
 		[20, 43,1.2],
@@ -64,8 +64,6 @@ def read_data_map(file):
 					values.append(value)
 
 			data_map['values'].append(values)
-
-			print('next data: ', next_data)
 
 
 	return data_map
