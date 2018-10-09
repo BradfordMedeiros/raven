@@ -2,15 +2,6 @@ from sklearn.neighbors import NearestNeighbors
 
 #	knearest algorithm
 #	we get the k-nearest neighbors, and then we average the k-nearest nodes
-#
-#  {  field: { 	// False still needs training data!
-#		is_prediction: True/False (default False)
-#       values: [30,342,234,2342,4]
-#	} 
-#  }
-#
-#  knearest({ humidity: { 20, 10, }})
-#
 
 class knearest():
 	def __init__(self, labels = None, predictors=None, configData=None):

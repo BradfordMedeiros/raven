@@ -1,55 +1,71 @@
 import csv 
 
-def verify_dimensions(data_map):
- 	label_length = None
-	for label in data_map:
-		length = len(data_map[label]['values'])
-		if label_length == None:
-			label_length = length
-			continue
-		if label_length != length:
-			return False
+"""
+{
+	
+	labels: ['temperature', 'humidity', 'growth'],
+	is_predictor: [False, False, True]
+	values: [
+		[10, 30,0.4],   # should be numpy array
+		[20, 43,1.2],
+		[30,12,1.4],
+	]
+}
 
-	return True
+"""
+
+
+def verify_dimensions(data_map):
+ 	all_same_length = len(data_map['labels']) == len(data_map['is_predictor']) == len(data_map['values'])
+ 	if not all_same_length:
+ 		return False
+
+ 	for arr in data_map['values']:
+ 		if len(arr) != len(data_map['labels']):
+ 			return False
+ 	return True
+
 
 def read_data_map(file):
-	data_map = { }
+	data_map = { 
+		'labels': [ ],
+		'is_predictor': [],
+		'values': [],
+	}
 
+	num_empty_spaces = 0
 	with open(file) as csvfile:
 		reader = csv.reader(csvfile)
 		labels = next(reader)
 
-		num_empty_spaces = 0
-
-		indexToLabel = {}
-		for i in range(len(labels)):
-			label = labels[i]
+		for label in labels:
 			if label == '' :
 				num_empty_spaces = num_empty_spaces + 1
 				if num_empty_spaces > 1:
 					raise Exception('too many empty spaces')
 				continue
-
-			indexToLabel[i] = label
-			data_map[label] = {
-				'is_predictor': num_empty_spaces == 0,
-				'values': [ ],
-			}
-
+			data_map['labels'].append(label)
+			data_map['is_predictor'].append(num_empty_spaces == 0)
+		
 		while True:
 			next_data = next(reader, None)
 			if next_data == None:
 				break
-			for i in range(len(next_data)):
-				element = next_data[i]
-				if element == '':
+
+			values = []
+			for value in next_data:
+				if value == '':
 					continue
-				label = indexToLabel[i]
-				data_map[label]['values'].append(element)
+				
+				try:
+					value_as_num = float(value)
+					values.append(value_as_num)
+				except:
+					values.append(value)
 
-		is_valid = verify_dimensions(data_map)
+			data_map['values'].append(values)
 
-		if not is_valid:
-			raise Exception('invalid dimensions')
-			
+			print('next data: ', next_data)
+
+
 	return data_map
