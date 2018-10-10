@@ -1,4 +1,4 @@
-from config.read_data_map import read_data_map
+from execute.util.config.read_data_map import read_data_map
 
 def test_read_data_map():
 	data_map = read_data_map('./data/knearest-sample.csv')
