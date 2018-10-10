@@ -1,36 +1,14 @@
 import sys
-import numpy
 import json
-from config.read_data_map import read_data_map
-from algorithms.arg_parsing.knearest import parse_args as parse_k_args
-from algorithms.arg_parsing.bayes import parse_args as parse_bayes_args
-from algorithms.implementation.knearest import knearest
-from algorithms.implementation.testAlgorithm import main as testAlgorithm
-from algorithms.config_requirements.knearest import is_valid_data_map as is_valid_data_map_knearest
-from algorithms.config_requirements.knearest import print_requirements as print_requirements_knearest
+from execute.util.config.read_data_map import read_data_map
+from execute.util.algorithms.arg_parsing.knearest import parse_args as parse_k_args
+from execute.util.algorithms.arg_parsing.bayes import parse_args as parse_bayes_args
+from execute.util.algorithms.implementation.testAlgorithm import main as testAlgorithm
+from execute.util.algorithms.config_requirements.knearest import is_valid_data_map as is_valid_data_map_knearest
+from execute.util.algorithms.config_requirements.knearest import print_requirements as print_requirements_knearest
+from execute.execute_knearest import execute_knearest
 
 moduleName = sys.argv[1]
-
-def execute_knearest(data_map, query):
-	print ('execute k-knearest success')
-	labels = data_map['labels']
-	predictors = data_map['is_predictor']
-	values = numpy.array(data_map['values'])
-
-	predictors_v = filter(lambda (x,y): predictors[x], enumerate(labels))
-	features_v = filter(lambda (x,y): not predictors[x], enumerate(labels))
-	predictor_labels = [x[1] for x in predictors_v]
-	feature_labels = [x[1] for x in features_v]
-	predictor_length = len(predictor_labels)
-	predictor_values = values[:, 0: predictor_length]
-	features_values = values[:, predictor_length:]
-
-	model = knearest(predictor_labels, predictor_values, feature_labels, features_values)
-	
-	prediction =  model.predict(json.loads(query))
-	print prediction
-
-
 modules = {
 	'knearest': {
 		'parse_args' : parse_k_args,
@@ -76,7 +54,7 @@ if not valid_map:
 print ('valid map')
 
 print ('starting executing : ' , moduleName)
-module['execute'](data_map, options.value)
+module['execute'](data_map, json.loads(options.value))
 
 
 
