@@ -5,7 +5,7 @@ from execute.util.algorithms.arg_parsing.knearest import parse_args as parse_k_a
 from execute.util.algorithms.arg_parsing.bayes import parse_args as parse_bayes_args
 from execute.util.algorithms.implementation.testAlgorithm import main as testAlgorithm
 from execute.util.algorithms.config_requirements.knearest import is_valid_data_map as is_valid_data_map_knearest
-from execute.util.algorithms.config_requirements.knearest import print_requirements as print_requirements_knearest
+from execute.util.algorithms.config_requirements.knearest import get_requirements as get_requirements_knearest
 from execute.execute_knearest import execute_knearest
 
 moduleName = sys.argv[1]
@@ -31,31 +31,20 @@ if moduleName == 'help' or moduleName == '-h':
 module = modules[moduleName]
 module_args = sys.argv[2:]
 options = module['parse_args'](module_args)
-print ('options: ')
-print (options)
-print 
 
 if options.usage:
-	print_requirements_knearest()
+	requirements = json.dumps(get_requirements_knearest())
+	print requirements
 	exit(0)
 
-data_map = None
-
-print ('parsing csv')
 data_map = read_data_map(options.data)
-print 'csv parse success'
-
-print 'checking data validity'
 valid_map = module['valid_map'](data_map)
 if not valid_map:
 	print('invalid config for knearest')
 	exit(1)
 
-print ('valid map')
-
-print ('starting executing : ' , moduleName)
-module['execute'](data_map, json.loads(options.value))
-
+result = module['execute'](data_map, json.loads(options.value))
+print json.dumps(result)
 
 
 """

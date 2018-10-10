@@ -1,9 +1,7 @@
 import numpy 
 from util.algorithms.implementation.knearest import knearest
 
-
 def execute_knearest(data_map, query):
-	print ('execute k-knearest success')
 	labels = data_map['labels']
 	predictors = data_map['is_predictor']
 	values = numpy.array(data_map['values'])
@@ -19,4 +17,4 @@ def execute_knearest(data_map, query):
 	model = knearest(predictor_labels, predictor_values, feature_labels, features_values)
 	
 	prediction =  model.predict(query)
-	print prediction
+	return prediction
