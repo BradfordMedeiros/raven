@@ -1,14 +1,35 @@
 import sys
+import numpy
+import json
 from config.read_data_map import read_data_map
 from algorithms.arg_parsing.knearest import parse_args as parse_k_args
 from algorithms.arg_parsing.bayes import parse_args as parse_bayes_args
+from algorithms.implementation.knearest import knearest
 from algorithms.implementation.testAlgorithm import main as testAlgorithm
 from algorithms.config_requirements.knearest import is_valid_data_map as is_valid_data_map_knearest
+from algorithms.config_requirements.knearest import print_requirements as print_requirements_knearest
 
 moduleName = sys.argv[1]
 
-def execute_knearest(data_map):
+def execute_knearest(data_map, query):
 	print ('execute k-knearest success')
+	labels = data_map['labels']
+	predictors = data_map['is_predictor']
+	values = numpy.array(data_map['values'])
+
+	predictors_v = filter(lambda (x,y): predictors[x], enumerate(labels))
+	features_v = filter(lambda (x,y): not predictors[x], enumerate(labels))
+	predictor_labels = [x[1] for x in predictors_v]
+	feature_labels = [x[1] for x in features_v]
+	predictor_length = len(predictor_labels)
+	predictor_values = values[:, 0: predictor_length]
+	features_values = values[:, predictor_length:]
+
+	model = knearest(predictor_labels, predictor_values, feature_labels, features_values)
+	
+	prediction =  model.predict(json.loads(query))
+	print prediction
+
 
 modules = {
 	'knearest': {
@@ -32,9 +53,17 @@ if moduleName == 'help' or moduleName == '-h':
 module = modules[moduleName]
 module_args = sys.argv[2:]
 options = module['parse_args'](module_args)
+print ('options: ')
+print (options)
+print 
+
+if options.usage:
+	print_requirements_knearest()
+	exit(0)
+
 data_map = None
 
-print 'parsing csv'
+print ('parsing csv')
 data_map = read_data_map(options.data)
 print 'csv parse success'
 
@@ -44,10 +73,10 @@ if not valid_map:
 	print('invalid config for knearest')
 	exit(1)
 
-print 'valid map'
+print ('valid map')
 
-print 'starting executing : ' , moduleName
-module['execute'](data_map)
+print ('starting executing : ' , moduleName)
+module['execute'](data_map, options.value)
 
 
 
