@@ -1,6 +1,7 @@
 import sys
 import json
 from execute.util.config.read_data_map import read_data_map
+import execute.data_map_manipulation as data_map_manipulation
 from execute.execute_knearest import execute_knearest
 from execute.execute_bayes import execute_bayes
 from execute.util.algorithms.arg_parsing.knearest import parse_args as parse_k_args
@@ -9,7 +10,6 @@ from execute.util.algorithms.config_requirements.knearest import is_valid_data_m
 from execute.util.algorithms.config_requirements.bayes import is_valid_data_map as is_valid_data_map_bayes
 from execute.util.algorithms.config_requirements.knearest import get_requirements as get_requirements_knearest
 from execute.util.algorithms.arg_parsing.bayes import parse_args as parse_bayes_args
-
 
 moduleName = sys.argv[1]
 modules = {
@@ -53,7 +53,7 @@ if not valid_map:
 	print('invalid config for knearest')
 	exit(1)
 
-result = module['execute'](data_map, json.loads(options['value']))
+result = module['execute'](data_map, json.loads(options['value']), data_map_manipulation)
 print json.dumps(result)
 
 """

@@ -1,7 +1,7 @@
 import numpy 
 from util.algorithms.implementation.knearest import knearest
 
-def execute_knearest(data_map, query):
+def execute_knearest(data_map, query, data_map_manipulation):
 	labels = data_map['labels']
 	predictors = data_map['is_predictor']
 	values = numpy.array(data_map['values'])
