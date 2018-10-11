@@ -11,4 +11,4 @@ def parse_args(options):
 	parser.add_argument('-v', '--value', dest='value', required=True, help='value to predict')
 
 	options = parser.parse_args(options)
-	return options
+	return vars(options)
