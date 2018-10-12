@@ -3,13 +3,10 @@ import json
 from execute.util.config.read_data_map import read_data_map
 import execute.data_map_manipulation as data_map_manipulation
 from execute.execute_knearest import execute_knearest
-from execute.execute_bayes import execute_bayes
 from execute.util.algorithms.arg_parsing.knearest import parse_args as parse_k_args
-from execute.util.algorithms.arg_parsing.bayes import parse_args as parse_bayes_args
 from execute.util.algorithms.config_requirements.knearest import is_valid_data_map as is_valid_data_map_knearest
 from execute.util.algorithms.config_requirements.bayes import is_valid_data_map as is_valid_data_map_bayes
 from execute.util.algorithms.config_requirements.knearest import get_requirements as get_requirements_knearest
-from execute.util.algorithms.arg_parsing.bayes import parse_args as parse_bayes_args
 
 moduleName = sys.argv[1]
 modules = {
@@ -18,18 +15,13 @@ modules = {
 		'valid_map': is_valid_data_map_knearest,
 		'execute': execute_knearest,
 	},
-	'bayes': {
-		'parse_args': parse_bayes_args,
-		'valid_map': is_valid_data_map_bayes,
-		'execute': execute_bayes,
-	},
 }
 
 if moduleName == 'help' or moduleName == '-h':
 	print('usage: ')
 	print('raven <modulename> <extra options>\n')
 	print('available modules:')
-	print('knearest, bayes')
+	print('knearest')
 	exit(0)
 
 
